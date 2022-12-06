@@ -19,7 +19,7 @@ The raw payload is also base64 encoded in the `X-Serialized` email header.
     "from": "motore-di-ricerca",
     "details": "potentially long text\nwith details\n",
     "captcha": "captcha-challenge-string"
-  }
+}
 ```
 
 Where:
