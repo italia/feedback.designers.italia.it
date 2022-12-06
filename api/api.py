@@ -1,5 +1,6 @@
 import base64
 import html
+import hashlib
 import os
 from json import dumps
 
@@ -39,6 +40,23 @@ async def message(req):
     icon = {'+': '👍', '-': '👎'}[feedback]
     escaped = {k: html.escape(req.json.get(k, '-')) for k in fields}
 
+    ip = req.headers.get("x-real-ip", "")
+
+    # Use more
+    accept_language = req.headers.get("accept-language", "")
+    accept_encoding = req.headers.get("accept-encoding", "")
+    user_agent = req.headers.get("user-agent", "")
+
+    # Remove last IP octet for anoymization
+    octets = ip.split(".")
+    ip = '.'.join(octets[:-1]) if len(octets) > 1 else octets[0]
+
+    # Remove last IPv6 hextet (if there evel will be any, Vercel doesn't support IPv6 yet)
+    hextets = ip.split(":")
+    ip = ':'.join(hextets[:-1]) if len(hextets) > 1 else hextets[0]
+
+    user_id = hashlib.sha256(f"{ip}{accept_language}{accept_encoding}{user_agent}".encode('utf-8')).hexdigest()
+
     body = f"""
     <p>
       Feedback per {escaped['url']}</a>
@@ -55,6 +73,9 @@ async def message(req):
 
       <dt><strong>Come possiamo migliorare questa pagina</strong></dt>
       <dd>{escaped['details']}</dd>
+
+      <dt><strong>User id</strong></dt>
+      <dd>{user_id}</dd>
     </dl>
     """
 
