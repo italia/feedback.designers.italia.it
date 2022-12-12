@@ -72,7 +72,7 @@ async def message(req):
       <dd>{escaped['from']}</dd>
 
       <dt><strong>Come possiamo migliorare questa pagina</strong></dt>
-      <dd>{escaped['details']}</dd>
+      <dd>{escaped['details'][:200]}</dd>
 
       <dt><strong>User id</strong></dt>
       <dd>{user_id}</dd>
