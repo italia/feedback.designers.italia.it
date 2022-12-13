@@ -37,7 +37,7 @@ async def message(req):
     if not feedback in ['+', '-']:
       return json({"message": "Invalid feedback field"}, status=422)
 
-    icon = {'+': '👍', '-': '👎'}[feedback]
+    icon = {'+': '👍 (Sì)', '-': '👎 (No)'}[feedback]
     escaped = {k: html.escape(req.json.get(k, '-')) for k in fields}
 
     ip = req.headers.get("x-real-ip", "")
